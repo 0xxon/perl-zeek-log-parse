@@ -36,9 +36,11 @@ Read the the line of the input and return the parsed data as a hash. Returns
 undef when on EOF.
 
 =head1 AUTHOR
+
 Johanna Amann, E<lt>johanna@icir.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
+
 Copyright 2014 by Johanna Amann
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
