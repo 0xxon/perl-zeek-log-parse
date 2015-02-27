@@ -22,7 +22,9 @@ by the L<Bro Network Monitoring System|http://www.bro.org>.
 
 =head1 FUNCTIONS
 
-=head2 new(constructor)
+=over 4
+
+=item B<new(constructor)>
 
 The base constructor for Bro::Log::Parse classes. It takes a mandatory parameter containing
 the path to the logfile as an adrument and returns the new object. If no file is specified,
@@ -30,10 +32,12 @@ input will be read from <>.
 
 If the file pointed to does not exist or cannot be opened, a fatal error is raised.
 
-=head2 getLine()
+=item B<getLine()>
 
 Read the the line of the input and return the parsed data as a hash. Returns
 undef when on EOF.
+
+=back
 
 =head1 AUTHOR
 
