@@ -6,7 +6,9 @@ use Test::More tests=>25;
 
 BEGIN { use_ok( 'Bro::Log::Parse' ); }
 
-my $parse = Bro::Log::Parse->new('logs/ssl.log');
+open( my $fh, "<", 'logs/ssl.log' );
+
+my $parse = Bro::Log::Parse->new($fh);
 my $line = $parse->getLine();
 is(scalar keys %$line, 14, "Number of entries");
 is($line->{ts}, '1394747126.855035', "ts");
@@ -36,3 +38,5 @@ is($line->{uid}, 'CjhGID4nQcgTWjvg4c', "uid");
 
 $line = $parse->getLine();
 is($line, undef, 'EOF');
+
+close($fh);

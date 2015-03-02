@@ -20,22 +20,70 @@ Perl interface for parsing Bro logfiles
 This library provides an easy and convenient way to parse the log files generated
 by the L<Bro Network Monitoring System|http://www.bro.org>.
 
-=head1 FUNCTIONS
+=head1 Constructor
+
+The base constructor for Bro::Log::Parse classes is called new. There are
+several different ways of calling the constructor, depending on the options you
+want to set. In a nutshell, one can either pass no argument (data is read from
+<>); a string argument, which is interpreted as a file name; a file handle which
+is used to read data from; or an array reference that can use all of these
+options and set a few more parameter.
 
 =over 4
 
-=item B<new(constructor)>
+=item B<new()>
 
-The base constructor for Bro::Log::Parse classes. It takes a mandatory parameter containing
-the path to the logfile as an adrument and returns the new object. If no file is specified,
-input will be read from <>.
+The first invocation of the base constructor for Bro::Log::Parse. No argument is
+passed. The resulting class reads Bro log data from <>.
 
-If the file pointed to does not exist or cannot be opened, a fatal error is raised.
+=item B<new('/path/to/file')>
+
+Passing a string to the constructor for Bro::Log::Parse will read Bro log data
+from the file pointed to. If the file pointed to does not exist or cannot be
+opened, a fatal error is raised.
+
+=item B<new($fh)>
+
+Passing a file handle to the constructor for Bro::Log::Parse will read Bro log
+data from the filehandle.
+
+=item B<new({ option => value })>
+
+Pass a hashref of options to the constructor for Bro::log::Parse. Options that
+can be given (in descending order of importance):
+
+=over 4
+
+=item B<fh>
+Filehandle to be used as data source.
+
+=item B<file>
+Name of file to be used as data source.
+
+=item B<diamond>
+Boolean; if set to true, data is read from <>, if no other data source is given.
+
+=back
+
+=back
+
+=head1 FUNCTIONS
+
+=over 4
 
 =item B<getLine()>
 
 Read the the line of the input and return the parsed data as a hash. Returns
 undef when on EOF.
+
+=item B<fh()>
+
+Return the filehandle data is read from. Returns undef if data is read from <>.
+
+=item B<file()>
+
+Return the filename data is read from. Returns undef if no filename was given in
+constructor.
 
 =back
 

@@ -1,37 +1,66 @@
 package Bro::Log::Parse;
+# ABSTRACT: Perl interface for parsing Bro logfiles
 
 use strict;
 use warnings;
 use 5.10.1;
 
-use Exporter;
+# use Exporter;
 use autodie;
 use Carp;
+use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #@EXPORT_OK = qw//;
 
+BEGIN {
+  my @accessors = qw/fh file/;
+
+  for my $accessor ( @accessors ) {
+    no strict 'refs';
+    *$accessor = sub {
+      my $self = shift;
+      return $self->{$accessor};
+    }
+  }
+
+}
+
 sub new {
   my $class = shift;
-  my $file = shift;
+  my $arg = shift;
 
   my $self = {};
+
+  if ( !defined($arg) ) {
+    $self->{diamond} = 1;
+  } elsif ( ref($arg) eq 'HASH' ) {
+    $self = $arg;
+  } elsif ( defined(openhandle($arg)) ) {
+    $self->{fh} = $arg;
+  } else {
+    $self->{file} = $arg;
+  }
+
   bless $self, $class;
 
-  if ( defined $file ) {
-
-    unless ( -f $file ) {
-      croak("Could not open $file");
+  if ( defined($self->{file}) && !(defined($self->{fh})) ) {
+    unless ( -f $self->{file} ) {
+      croak("Could not open ".$self->{file});
     }
 
-    open( my $fh, "<", $file )
-      or croak("Cannot open $file");
-
-    $self->{file} = $file;
+    open( my $fh, "<", $self->{file} )
+      or croak("Cannot open ".$self->{file});
     $self->{fh} = $fh;
+  }
 
-    $self->{names} = [ $self->readheader($fh) ];
+  if ( !defined($self->{fh}) && ( !defined($self->{diamond}) || !$self->{diamond} ) ) {
+    croak("No filename given in constructor. Aborting");
+  }
+
+  if ( defined($self->{fh}) ) {
+    $self->{names} = [ $self->readheader($self->{fh}) ];
   } else {
     $self->{names} = [ $self->readheader() ];
   }
