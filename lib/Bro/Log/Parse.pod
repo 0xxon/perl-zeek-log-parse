@@ -55,12 +55,15 @@ can be given (in descending order of importance):
 =over 4
 
 =item B<fh>
+
 Filehandle to be used as data source.
 
 =item B<file>
+
 Name of file to be used as data source.
 
 =item B<diamond>
+
 Boolean; if set to true, data is read from <>, if no other data source is given.
 
 =back
