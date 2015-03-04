@@ -25,7 +25,7 @@ by the L<Bro Network Monitoring System|http://www.bro.org>.
 The base constructor for Bro::Log::Parse classes is called new. There are
 several different ways of calling the constructor, depending on the options you
 want to set. In a nutshell, one can either pass no argument (data is read from
-<>); a string argument, which is interpreted as a file name; a file handle which
+C<< <> >>); a string argument, which is interpreted as a file name; a file handle which
 is used to read data from; or an array reference that can use all of these
 options and set a few more parameter.
 
@@ -34,7 +34,7 @@ options and set a few more parameter.
 =item B<new()>
 
 The first invocation of the base constructor for Bro::Log::Parse. No argument is
-passed. The resulting class reads Bro log data from <>.
+passed. The resulting class reads Bro log data from C<< <> >>.
 
 =item B<new('/path/to/file')>
 
@@ -47,7 +47,7 @@ opened, a fatal error is raised.
 Passing a file handle to the constructor for Bro::Log::Parse will read Bro log
 data from the filehandle.
 
-=item B<new({ option => value })>
+=item B<new({ option =E<gt> value })>
 
 Pass a hashref of options to the constructor for Bro::log::Parse. Options that
 can be given (in descending order of importance):
@@ -64,7 +64,7 @@ Name of file to be used as data source.
 
 =item B<diamond>
 
-Boolean; if set to true, data is read from <>, if no other data source is given.
+Boolean; if set to true, data is read from C<< <> >>, if no other data source is given.
 
 =back
 
@@ -81,7 +81,7 @@ undef when on EOF.
 
 =item B<fh()>
 
-Return the filehandle data is read from. Returns undef if data is read from <>.
+Return the filehandle data is read from. Returns undef if data is read from C<< <> >>.
 
 =item B<file()>
 
