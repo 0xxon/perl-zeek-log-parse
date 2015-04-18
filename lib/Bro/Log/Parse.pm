@@ -10,12 +10,12 @@ use autodie;
 use Carp;
 use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #@EXPORT_OK = qw//;
 
 BEGIN {
-  my @accessors = qw/fh file/;
+  my @accessors = qw/fh file line headers/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -32,6 +32,7 @@ sub new {
   my $arg = shift;
 
   my $self = {};
+  $self->{line} = undef;
 
   if ( !defined($arg) ) {
     $self->{diamond} = 1;
@@ -69,14 +70,15 @@ sub new {
 }
 
 sub readheader {
-  shift if ( defined $_[0] && ref($_[0]) && UNIVERSAL::can($_[0], 'isa') );
-
+  my $self = shift;
   my $in = shift;
 
+  my @headerlines;
   my @names;
   # first: read header line. This is a little brittle, but... welll... well, it is.
   while ( my $line = defined($in) ? <$in> : <> ) {
     chomp($line);
+    push(@headerlines, $line);
 
     my @fields = split /\t/,$line;
 
@@ -92,6 +94,8 @@ sub readheader {
     }
   }
 
+  $self->{headers} = \@headerlines;
+
   return @names;
 }
 
@@ -104,6 +108,7 @@ sub getLine {
 
   while ( my $line = defined($fh) ? <$fh> : <> ) {
     my $removed = chomp($line);
+    $self->{line} = $line;
     next if ( $line =~ /^#/ );
 
     my @fields = split "\t", $line;

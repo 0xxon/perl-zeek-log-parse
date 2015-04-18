@@ -66,6 +66,12 @@ Name of file to be used as data source.
 
 Boolean; if set to true, data is read from C<< <> >>, if no other data source is given.
 
+=item B<line>
+Value of the last line that was read; undef if no line was read yet.
+
+=item B<headers>
+Arrayref of all header lines that were read.
+
 =back
 
 =back
