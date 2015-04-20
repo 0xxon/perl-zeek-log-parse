@@ -10,7 +10,7 @@ use autodie;
 use Carp;
 use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 #@EXPORT_OK = qw//;
 
@@ -109,9 +109,20 @@ sub getLine {
   while ( my $line = defined($fh) ? <$fh> : <> ) {
     my $removed = chomp($line);
     $self->{line} = $line;
-    next if ( $line =~ /^#/ );
 
     my @fields = split "\t", $line;
+
+    if ( $line =~ /^#/  ) {
+      if ( "#fields" eq shift(@fields) ) {
+        @names = @fields;
+        $self->{names} = \@fields;
+        # This is not really nice, but for the moment we do not really need any
+        # of the other header lines for parsing files - and we do not keep track
+        # of them. Sorry...
+        $self->{headers} = [ join("\t", ("#fields", @fields)) ];
+      }
+      next;
+    }
     my %f;
 
     unless (scalar @names == scalar @fields) {
