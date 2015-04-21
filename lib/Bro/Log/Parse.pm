@@ -131,10 +131,11 @@ sub getLine {
     }
 
     for my $name ( @names ) {
-      if ( ( $fields[0] eq "-" ) || $fields[0] eq "(empty)" ) {
-        shift(@fields); # empty field
+			my $field = shift(@fields);
+      if ( ( $field eq "-" ) || $field eq "(empty)" ) {
+        $f{$name} = undef; # empty field
       } else {
-        $f{$name} = shift(@fields);
+        $f{$name} = $field;
       }
     }
 

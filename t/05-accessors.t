@@ -8,7 +8,7 @@ BEGIN { use_ok( 'Bro::Log::Parse' ); }
 
 my $parse = Bro::Log::Parse->new('logs/ssl.log');
 my $line = $parse->getLine();
-is(scalar keys %$line, 14, "Number of entries");
+is(scalar keys %$line, 20, "Number of entries");
 is($parse->file, 'logs/ssl.log', "File name accessor");
 is(length($parse->line), 323, "Line length");
 is($parse->headers->[5], "#open	2014-08-08-17-13-55", "Header lines");
