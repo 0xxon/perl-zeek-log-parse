@@ -104,9 +104,10 @@ sub readLines {
     my @out;
     for my $c (keys %columns) {
       my $column = $columns{$c};
+      croak("Column $c does not exist in file") if ( !exists($f->{$c}) );
       my $field = $f->{$c};
+      $field //= '-';
 
-      croak("Column $c does not exist in file") if ( !defined($field) );
       if ( $column->truncate ) {
         $field = int($field/$column->truncate) * $column->truncate;
       }
