@@ -10,7 +10,7 @@ BEGIN { use_ok( 'Bro::Log::Parse' ); }
 
 my $parse = Bro::Log::Parse->new();
 my $line = $parse->getLine();
-is(scalar keys %$line, 14, "Number of entries");
+is(scalar keys %$line, 20, "Number of entries");
 is($line->{ts}, '1394747126.855035', "ts");
 is($line->{uid}, 'CXWv6p3arKYeMETxOg', "uid");
 is($line->{'id.orig_h'}, '192.168.4.149', "id.orig_h");
@@ -33,7 +33,7 @@ is($line->{client_subject}, undef, "client_subject");
 is($line->{client_issuer}, undef, "client_issuer");
 
 $line = $parse->getLine();
-is(scalar keys %$line, 14, "Number of entries");
+is(scalar keys %$line, 20, "Number of entries");
 is($line->{uid}, 'CjhGID4nQcgTWjvg4c', "uid");
 
 $line = $parse->getLine();

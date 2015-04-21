@@ -2,19 +2,21 @@ use 5.10.1;
 use strict;
 use warnings;
 
-use Test::More tests=>25;
+use Test::More tests=>27;
 
 BEGIN { use_ok( 'Bro::Log::Parse' ); }
 
 my $parse = Bro::Log::Parse->new('logs/ssl.log');
 my $line = $parse->getLine();
-is(scalar keys %$line, 14, "Number of entries");
+is(scalar keys %$line, 20, "Number of entries");
 is($line->{ts}, '1394747126.855035', "ts");
 is($line->{uid}, 'CXWv6p3arKYeMETxOg', "uid");
 is($line->{'id.orig_h'}, '192.168.4.149', "id.orig_h");
 is($line->{'id.orig_p'}, 60623, "id.orig_p");
 is($line->{'id.resp_h'}, '74.125.239.129', "id.resp_h");
 is($line->{'id.resp_p'}, 443, "id.resp_p");
+ok(!defined($line->{server_name}), "undef server_name");
+ok(exists($line->{server_name}), "existing server_name");
 is($line->{version}, 'TLSv12', "version");
 is($line->{cipher}, 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', "cipher");
 is($line->{curve}, 'secp256r1', "curve");
@@ -31,7 +33,7 @@ is($line->{client_subject}, undef, "client_subject");
 is($line->{client_issuer}, undef, "client_issuer");
 
 $line = $parse->getLine();
-is(scalar keys %$line, 14, "Number of entries");
+is(scalar keys %$line, 20, "Number of entries");
 is($line->{uid}, 'CjhGID4nQcgTWjvg4c', "uid");
 
 $line = $parse->getLine();
