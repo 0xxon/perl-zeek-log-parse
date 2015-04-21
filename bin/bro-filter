@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+our $VERSION = '0.05';
+
+use Bro::Log::Filter::App;
+Bro::Log::Filter::App->cmd(\@ARGV);
+

@@ -10,7 +10,7 @@ use autodie;
 use Carp;
 use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 #@EXPORT_OK = qw//;
 
