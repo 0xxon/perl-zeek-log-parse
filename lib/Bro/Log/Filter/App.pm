@@ -112,12 +112,13 @@ sub readLines {
     my @out;
     COLUMN: for my $c (keys %columns) {
       my $column = $columns{$c};
-      my $field = $f->{$c};
-
-      if ( !defined($field) ) {
+      if ( !exists($f->{$c}) ) {
         next COLUMN if ( $column->optional );
         croak("Column $c does not exist in file. Columns are: ".join(' ', keys %$f))
-      }
+      }      
+      my $field = $f->{$c};
+      $field //= '-';
+
 
       if ( $column->truncate ) {
         $field = int($field/$column->truncate) * $column->truncate;
