@@ -9,7 +9,7 @@ use Carp;
 our $VERSION = '0.05';
 
 BEGIN {
-  my @accessors = qw/print truncate/;
+  my @accessors = qw/print truncate optional/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -33,7 +33,7 @@ sub new {
 
   $arg //= {};
 
-  for my $acc (qw/print truncate/) {
+  for my $acc (qw/print truncate optional/) {
     $self->{$acc} = 0;
     $self->{$acc} = $arg->{$acc} if ( defined($arg->{$acc}) );
   }

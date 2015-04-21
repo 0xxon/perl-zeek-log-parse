@@ -15,7 +15,7 @@ use Data::Dumper;
 our $VERSION = '0.05';
 
 BEGIN {
-  my @accessors = qw/columns unique count/;
+  my @accessors = qw/columns unique count colMap/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -33,9 +33,10 @@ sub new {
 
   my $self = {};
 
-  $self->{columns} = {};
+  $self->{columns} = {}; # column mapping by name
   $self->{unique} = 0;
   $self->{count} = 0;
+  $self->{colMap} = []; # column mapping by number - contains a list of possible column names for the column number
 
   bless $self, $class;
 
@@ -76,8 +77,15 @@ sub parseArgv {
   @print = split(/,/,join(',',@print));
 
   my $pos = 1;
-  for my $p ( @print ) {
-    $self->setColumns('print', $pos++, [ $p ]);
+  for my $printField ( @print ) {
+    my @subFields = split(/\|/, $printField);
+    for my $p ( @subFields ) {
+      push(@{$self->{colMap}->[$pos-1]}, $p);
+      $self->setColumns('print', $pos, [ $p ]);
+      $self->setColumns('optional', 1, [ $p ]) if ( (scalar @subFields) > 1);
+    }
+
+    $pos++;
   }
 
   for my $t ( @truncate ) {
@@ -100,18 +108,26 @@ sub readLines {
 
   my %unique;
 
-  while ( my $f = $p->getLine() ) {
+  LINE: while ( my $f = $p->getLine() ) {
     my @out;
-    for my $c (keys %columns) {
+    COLUMN: for my $c (keys %columns) {
       my $column = $columns{$c};
       my $field = $f->{$c};
 
-      croak("Column $c does not exist in file") if ( !defined($field) );
+      if ( !defined($field) ) {
+        next COLUMN if ( $column->optional );
+        croak("Column $c does not exist in file. Columns are: ".join(' ', keys %$f))
+      }
+
       if ( $column->truncate ) {
         $field = int($field/$column->truncate) * $column->truncate;
       }
 
       $out[$column->print - 1] = $field if ( $column->print != 0 );
+    }
+    if ( (scalar grep {defined} @out) != (scalar @{$self->colMap}) ) {
+      say STDERR $p->line;
+      croak("Optional column missing in file. Columns are: ".join(' ', keys %$f));
     }
     my $outstr = join("\t", @out);
 
@@ -143,4 +159,5 @@ sub cmd {
 
   my $parse = Bro::Log::Parse->new();
   $self->readLines($parse);
+
 }
