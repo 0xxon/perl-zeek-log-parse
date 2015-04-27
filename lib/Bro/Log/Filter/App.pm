@@ -5,7 +5,7 @@ use warnings;
 use 5.10.1;
 
 use Carp;
-use Getopt::Long qw/2.32 GetOptionsFromArray :config bundling auto_version/;
+use Getopt::Long 2.32 qw/GetOptionsFromArray :config bundling auto_version/;
 
 use Bro::Log::Parse;
 use Bro::Log::Filter::Column;
@@ -15,7 +15,7 @@ use Data::Dumper;
 our $VERSION = '0.05';
 
 BEGIN {
-  my @accessors = qw/columns unique count/;
+  my @accessors = qw/columns unique count ignore null/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -36,6 +36,8 @@ sub new {
   $self->{columns} = {};
   $self->{unique} = 0;
   $self->{count} = 0;
+  $self->{ignore} = 0;
+  $self->{null} = 0;
 
   bless $self, $class;
 
@@ -58,7 +60,7 @@ sub setColumns {
 sub parseArgv {
   my $self = shift;
   my $argv = shift;
-  
+
   if ( !defined($argv) || ref($argv) ne 'ARRAY' ) {
     croak("cmd needs arrayref as argument");
   }
@@ -70,7 +72,9 @@ sub parseArgv {
     "p|print=s" => \@print,
     "t|truncate=s" => \@truncate,
     "u|unique" => \$self->{unique},
-    "c|count" => \$self->{count}
+    "c|count" => \$self->{count},
+    "i|ignore" => \$self->{ignore}, # ignore lines where an element is missing
+    "n|null" => \$self->{null}, # show nonexisting elements as null
   );
   croak("Error while processing command line arguments") unless ($res);
   @print = split(/,/,join(',',@print));
@@ -100,11 +104,14 @@ sub readLines {
 
   my %unique;
 
-  while ( my $f = $p->getLine() ) {
+  LINE: while ( my $f = $p->getLine() ) {
     my @out;
     for my $c (keys %columns) {
       my $column = $columns{$c};
-      croak("Column $c does not exist in file") if ( !exists($f->{$c}) );
+      if ( !exists($f->{$c}) && !$self->{null} ) {
+        next LINE if ( $self->ignore );
+        croak("Column $c does not exist in file");
+      }
       my $field = $f->{$c};
       $field //= '-';
 
