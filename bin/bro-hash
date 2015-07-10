@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+our $VERSION = '0.05';
+
+use Bro::Log::Hash::App;
+Bro::Log::Hash::App->cmd(\@ARGV);
+

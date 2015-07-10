@@ -15,7 +15,7 @@ our $VERSION = '0.05';
 #@EXPORT_OK = qw//;
 
 BEGIN {
-  my @accessors = qw/fh file line headers/;
+  my @accessors = qw/fh file line headers fields/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -65,6 +65,8 @@ sub new {
   } else {
     $self->{names} = [ $self->readheader() ];
   }
+
+  $self->{fields} = $self->{names};
 
   return $self;
 }
@@ -131,7 +133,7 @@ sub getLine {
     }
 
     for my $name ( @names ) {
-			my $field = shift(@fields);
+      my $field = shift(@fields);
       if ( ( $field eq "-" ) || $field eq "(empty)" ) {
         $f{$name} = undef; # empty field
       } else {
