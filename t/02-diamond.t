@@ -26,7 +26,7 @@ is($line->{last_alert}, undef, "last_alert");
 is($line->{next_protocol}, undef, "next_protocol");
 is($line->{established}, 'T', "established");
 is($line->{cert_chain_fuids}, 'FlaIzV19yTmBYwWwc6,F0BeiV3cMsGkNML0P2,F6PfYi2WUoPdIJrhpg', "cert_chain_fuids");
-is($line->{client_cert_chain_fuids}, undef, "client_cert_chain_fuids");
+is(scalar @{$line->{client_cert_chain_fuids}}, 0, "client_cert_chain_fuids");
 is($line->{subject}, 'CN=*.google.com,O=Google Inc,L=Mountain View,ST=California,C=US', "subject");
 is($line->{issuer}, 'CN=Google Internet Authority G2,O=Google Inc,C=US', "issuer");
 is($line->{client_subject}, undef, "client_subject");

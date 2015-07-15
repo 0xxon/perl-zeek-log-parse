@@ -66,11 +66,9 @@ Name of file to be used as data source.
 
 Boolean; if set to true, data is read from C<< <> >>, if no other data source is given.
 
-=item B<line>
-Value of the last line that was read; undef if no line was read yet.
+=item B<empty_as_undef>
 
-=item B<headers>
-Arrayref of all header lines that were read.
+Boolean; if set to true, C<< getLine() >> will return empty columns as undef instead of as empty arrayrefs.
 
 =back
 
@@ -93,6 +91,18 @@ Return the filehandle data is read from. Returns undef if data is read from C<< 
 
 Return the filename data is read from. Returns undef if no filename was given in
 constructor.
+
+=item B<line()>
+
+Value of the last line that was read; undef if no line was read yet.
+
+=item B<headers()>
+
+Arrayref of all header lines that were read.
+
+=item B<fields()>
+
+Arrayref of all fields present in the input file.
 
 =back
 

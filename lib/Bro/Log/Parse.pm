@@ -68,6 +68,8 @@ sub new {
 
   $self->{fields} = $self->{names};
 
+  $self->{empty_as_undef} //= 0;
+
   return $self;
 }
 
@@ -85,13 +87,15 @@ sub readheader {
     my @fields = split /\t/,$line;
 
     unless ( $line =~ /^#/ ) {
-      croak("Did not find fields header: $line");
+      croak("Did not find required fields and types header lines: $line");
     }
 
-    if ( "#fields" eq shift(@fields) ) {
+    my $type = shift(@fields);
+    if ( "#fields" eq  $type ) {
       # yay.
       # we have our field names...
       @names = @fields;
+    } elsif ( "#types" eq $type) {
       last;
     }
   }
@@ -134,8 +138,10 @@ sub getLine {
 
     for my $name ( @names ) {
       my $field = shift(@fields);
-      if ( ( $field eq "-" ) || $field eq "(empty)" ) {
-        $f{$name} = undef; # empty field
+      if ( ( $field eq "-" ) ) {
+        $f{$name} = undef;
+      } elsif ( $field eq "(empty)" ) {
+        $f{$name} = $self->{empty_as_undef} ? undef : [];
       } else {
         $f{$name} = $field;
       }
