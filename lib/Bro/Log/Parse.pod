@@ -20,6 +20,9 @@ Perl interface for parsing Bro logfiles
 This library provides an easy and convenient way to parse the log files generated
 by the L<Bro Network Monitoring System|http://www.bro.org>.
 
+If the L<JSON> module is installed, this module can also be used to parse Bro log
+files that were written in JSON format.
+
 =head1 Constructor
 
 The base constructor for Bro::Log::Parse classes is called new. There are

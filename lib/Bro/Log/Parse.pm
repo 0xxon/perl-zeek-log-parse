@@ -14,6 +14,12 @@ our $VERSION = '0.07';
 
 #@EXPORT_OK = qw//;
 
+my $json = eval {
+  require JSON;
+  JSON->import();
+  1;
+}; # true if we support reading from json
+
 BEGIN {
   my @accessors = qw/fh file line headers headerlines fields/;
 
@@ -60,27 +66,39 @@ sub new {
     croak("No filename given in constructor. Aborting");
   }
 
-  if ( defined($self->{fh}) ) {
-    $self->{names} = [ $self->readheader($self->{fh}) ];
-  } else {
-    $self->{names} = [ $self->readheader() ];
-  }
-
+  $self->{json_file} = 0;
+  $self->{names} = [ $self->readheader() ];
   $self->{fields} = $self->{names};
-
   $self->{empty_as_undef} //= 0;
+
+  $self->{headers} //= {};
+  $self->{headerlines} //= [];
 
   return $self;
 }
 
 sub readheader {
   my $self = shift;
-  my $in = shift;
 
   my @headerlines;
   my @names;
+  my $firstline = 1;
   # first: read header line. This is a little brittle, but... welll... well, it is.
-  while ( my $line = defined($in) ? <$in> : <> ) {
+  while ( my $line = $self->extractNextLine() ) {
+    if ( $firstline ) {
+      $firstline = 0;
+      if ( length($line) > 1 && substr($line, 0, 1) eq "{" ) {
+        # Json file. stuff line in saved_line and try to extract header fields...
+        croak("Parsing json formatted log files needs JSON module") unless ( $json );
+        my $val = decode_json($line);
+        $self->{saved_line} = $line;
+        if ( !defined($val) || ref($val) ne "HASH" ) {
+          croak("Error parsing first line of json formatted log - $line");
+        }
+        $self->{json_file} = 1;
+        return sort keys %$val;
+      }
+    }
     chomp($line);
     push(@headerlines, $line);
 
@@ -101,7 +119,7 @@ sub readheader {
   }
 
   $self->{headerlines} = \@headerlines;
-	$self->{headers} = { map {/#(\w+)\s+(.*)/;$1=>$2} @headerlines };
+  $self->{headers} = { map {/#(\w+)\s+(.*)/;$1=>$2} @headerlines };
 
   return @names;
 }
@@ -110,12 +128,20 @@ sub readheader {
 sub getLine {
   my $self = shift;
 
-  my $fh = $self->{fh};
   my @names = @{$self->{names}};
 
-  while ( my $line = defined($fh) ? <$fh> : <> ) {
+  while ( my $line = $self->extractNextLine ) {
     my $removed = chomp($line);
     $self->{line} = $line;
+
+    if ( $self->{json_file} ) {
+      my $val = decode_json($line);
+      if ( !defined($val) || ref($val) ne "HASH" ) {
+        croak("Error parsing line of json formatted log - $line");
+      }
+      $self->{names} = [ sort keys %$val ];
+      return $val;
+    }
 
     my @fields = split "\t", $line;
 
@@ -150,6 +176,20 @@ sub getLine {
 
     return \%f;
   }
+}
+
+sub extractNextLine {
+  my $self = shift;
+
+  if( defined($self->{saved_line}) ) {
+    my $sl = $self->{saved_line};
+    undef $self->{saved_line};
+    return $sl;
+  }
+
+  my $in = $self->{fh};
+
+  return defined($in) ? <$in> : <>;
 }
 
 1;

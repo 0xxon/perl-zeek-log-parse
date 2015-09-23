@@ -9,4 +9,4 @@ BEGIN {
 use Test::More;
 eval "use Test::Pod::Coverage";
 plan skip_all => "Test::Pod::Coverage required for testing POD Coverage" if $@;
-all_pod_coverage_ok( { also_private => ['readheader'] } );
+all_pod_coverage_ok( { also_private => ['readheader', 'extractNextLine'] } );
