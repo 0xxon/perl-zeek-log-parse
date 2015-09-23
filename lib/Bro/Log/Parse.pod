@@ -98,7 +98,11 @@ Value of the last line that was read; undef if no line was read yet.
 
 =item B<headers()>
 
-Arrayref of all header lines that were read.
+Hash reference of all headers that were read. Contains, for example, open, fields, types, etc.
+
+=item B<headerlines()>
+
+Arrayref of all header lines that were read in order.
 
 =item B<fields()>
 

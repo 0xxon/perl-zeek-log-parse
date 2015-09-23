@@ -10,12 +10,12 @@ use autodie;
 use Carp;
 use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 #@EXPORT_OK = qw//;
 
 BEGIN {
-  my @accessors = qw/fh file line headers fields/;
+  my @accessors = qw/fh file line headers headerlines fields/;
 
   for my $accessor ( @accessors ) {
     no strict 'refs';
@@ -100,7 +100,8 @@ sub readheader {
     }
   }
 
-  $self->{headers} = \@headerlines;
+  $self->{headerlines} = \@headerlines;
+	$self->{headers} = { map {/#(\w+)\s+(.*)/;$1=>$2} @headerlines };
 
   return @names;
 }
