@@ -1,31 +1,31 @@
 =head1 NAME
 
-Bro::Log::Parse - Object-oriented Perl interface for parsing Bro log files
+Zeek::Log::Parse - Object-oriented Perl interface for parsing Zeek log files
 
 =head1 SYNOPSIS
 
-  use Bro::Log::Parse;
+  use Zeek::Log::Parse;
   
-  my $parse = Bro::Log::Parse->new('/path/to/logfile');
+  my $parse = Zeek::Log::Parse->new('/path/to/logfile');
   while ( $fields = $parse->getLine() ) {
     print $fields->{ts}."\n";
   }
 
 =head1 ABSTRACT
 
-Perl interface for parsing Bro logfiles
+Perl interface for parsing Zeek logfiles
 
 =head1 DESCRIPTION
 
 This library provides an easy and convenient way to parse the log files generated
-by the L<Bro Network Monitoring System|http://www.bro.org>.
+by the L<Zeek Network Security Monitor|http://www.zeek.org>.
 
-If the L<JSON> module is installed, this module can also be used to parse Bro log
+If the L<JSON> module is installed, this module can also be used to parse Zeek log
 files that were written in JSON format.
 
 =head1 Constructor
 
-The base constructor for Bro::Log::Parse classes is called new. There are
+The base constructor for Zeek::Log::Parse classes is called new. There are
 several different ways of calling the constructor, depending on the options you
 want to set. In a nutshell, one can either pass no argument (data is read from
 C<< <> >>); a string argument, which is interpreted as a file name; a file handle which
@@ -36,23 +36,23 @@ options and set a few more parameter.
 
 =item B<new()>
 
-The first invocation of the base constructor for Bro::Log::Parse. No argument is
-passed. The resulting class reads Bro log data from C<< <> >>.
+The first invocation of the base constructor for Zeek::Log::Parse. No argument is
+passed. The resulting class reads Zeek log data from C<< <> >>.
 
 =item B<new('/path/to/file')>
 
-Passing a string to the constructor for Bro::Log::Parse will read Bro log data
+Passing a string to the constructor for Zeek::Log::Parse will read Zeek log data
 from the file pointed to. If the file pointed to does not exist or cannot be
 opened, a fatal error is raised.
 
 =item B<new($fh)>
 
-Passing a file handle to the constructor for Bro::Log::Parse will read Bro log
+Passing a file handle to the constructor for Zeek::Log::Parse will read Zeek log
 data from the filehandle.
 
 =item B<new({ option =E<gt> value })>
 
-Pass a hashref of options to the constructor for Bro::log::Parse. Options that
+Pass a hashref of options to the constructor for Zeek::log::Parse. Options that
 can be given (in descending order of importance):
 
 =over 4
@@ -119,7 +119,7 @@ Johanna Amann, E<lt>johanna@icir.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2014 by Johanna Amann
+Copyright 2019 by Johanna Amann
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 

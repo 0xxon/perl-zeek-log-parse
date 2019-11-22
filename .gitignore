@@ -1,3 +1,4 @@
 .*.swp
 .build
 Bro-Log-Parse-0.*
+Zeek-Log-Parse-0.*

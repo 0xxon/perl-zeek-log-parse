@@ -14,9 +14,9 @@ BEGIN {
 	};
 }
 
-BEGIN { use_ok( 'Bro::Log::Parse' ); }
+BEGIN { use_ok( 'Zeek::Log::Parse' ); }
 
-my $parse = Bro::Log::Parse->new('logs/x509.json');
+my $parse = Zeek::Log::Parse->new('logs/x509.json');
 
 is(join(",", sort @{$parse->{fields}}), "basic_constraints.ca,certificate.exponent,certificate.issuer,certificate.key_alg,certificate.key_length,certificate.key_type,certificate.not_valid_after,certificate.not_valid_before,certificate.serial,certificate.sig_alg,certificate.subject,certificate.version,id,san.dns,ts", "read fields");
 is(scalar @{$parse->{headerlines}}, 0, "no headers");

@@ -4,9 +4,9 @@ use warnings;
 
 use Test::More tests=>9;
 
-BEGIN { use_ok( 'Bro::Log::Parse' ); }
+BEGIN { use_ok( 'Zeek::Log::Parse' ); }
 
-my $parse = Bro::Log::Parse->new('logs/sslx509.log');
+my $parse = Zeek::Log::Parse->new('logs/sslx509.log');
 my $line = $parse->getLine();
 is(scalar keys %$line, 20, "Number of entries");
 $line = $parse->getLine();

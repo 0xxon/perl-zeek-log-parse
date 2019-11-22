@@ -4,11 +4,11 @@ use warnings;
 
 use Test::More tests=>25;
 
-BEGIN { use_ok( 'Bro::Log::Parse' ); }
+BEGIN { use_ok( 'Zeek::Log::Parse' ); }
 
 open( my $fh, "<", 'logs/ssl.log' );
 
-my $parse = Bro::Log::Parse->new($fh);
+my $parse = Zeek::Log::Parse->new($fh);
 my $line = $parse->getLine();
 is(scalar keys %$line, 20, "Number of entries");
 is($line->{ts}, '1394747126.855035', "ts");

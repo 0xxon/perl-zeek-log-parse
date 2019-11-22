@@ -1,5 +1,5 @@
-package Bro::Log::Parse;
-# ABSTRACT: Perl interface for parsing Bro logfiles
+package Zeek::Log::Parse;
+# ABSTRACT: Perl interface for parsing Zeek logfiles
 
 use strict;
 use warnings;
@@ -10,7 +10,7 @@ use autodie;
 use Carp;
 use Scalar::Util qw/openhandle/;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 #@EXPORT_OK = qw//;
 
